@@ -205,7 +205,7 @@ class FasterRCNN(object):
         print('Complete loading model')
 
 
-    def predict(self, img, video_stream, bbox_threshold=0.7):
+    def predict(self, img, video_stream, face_threshold=0.78, plate_threshold=0.72):
         st = time.time()
         class_to_color = { self.C.class_mapping[v]: np.random.randint(0, 255, 3) for v in self.C.class_mapping }
 
@@ -248,10 +248,13 @@ class FasterRCNN(object):
             # Calculate bboxes coordinates on resized image
             for ii in range(P_cls.shape[1]):
                 # Ignore 'bg' class
-                if np.max(P_cls[0, ii, :]) < bbox_threshold or np.argmax(P_cls[0, ii, :]) == (P_cls.shape[2] - 1):
-                    continue
-                
+
                 cls_name = self.C.class_mapping[np.argmax(P_cls[0, ii, :])]
+                if cls_name == 'Vehicle registration plate':
+                    threshold = plate_threshold
+
+                if np.max(P_cls[0, ii, :]) < threshold or np.argmax(P_cls[0, ii, :]) == (P_cls.shape[2] - 1):
+                    continue
 
                 if cls_name not in bboxes:
                     bboxes[cls_name] = []
