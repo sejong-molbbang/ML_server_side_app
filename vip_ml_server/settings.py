@@ -41,10 +41,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'predict_app',
-    'member_manager'
+    'member_manager',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',     # add
+    'django.middleware.common.CommonMiddleware', # add
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,6 +55,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:30",
+    "http://localhost:100"
 ]
 
 ROOT_URLCONF = 'vip_ml_server.urls'
@@ -104,7 +114,7 @@ CACHES = {
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'standard': {
             'format': '%(asctime)s %(levelname)s %(name)s %(message)s'
@@ -119,10 +129,15 @@ LOGGING = {
             'backupCount': 5,
             'formatter':'standard',
         },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        }
     },
     'loggers': {
         '': {
-            'handlers': ['default'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True
         },
