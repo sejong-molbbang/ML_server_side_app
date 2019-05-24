@@ -41,8 +41,8 @@ class Command(BaseCommand):
         output_path = options['output_path']
 
         dl_model = self.load_model()
-
-        #cached
+        
+        #cached ( 이거 처음 켤 때  딥러닝 모델을 캐시에 저장하는거다)
         cache.clear()
         cache.set('input_path', input_path)
         cache.set('output_path', output_path)

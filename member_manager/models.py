@@ -8,9 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from .managers import UserManager
 
-
-class User(AbstractBaseUser, PermissionsMixin):  
-    email = models.EmailField(_('email address'), unique=True)
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(_('email'), unique=True)
     password = models.CharField(max_length=28)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     is_active = models.BooleanField(_('active'), default=True)

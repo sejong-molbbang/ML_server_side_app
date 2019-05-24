@@ -1,16 +1,24 @@
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth import get_user_model
+import logging
+logger = logging.getLogger(__name__)
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
+    def __init__(self):
+        super().__init__()
 
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('You must input email')
         
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
+        User = get_user_model()
+        if not (User.objects.filter(email=email).exists()):
+            user = User.objects.create(email=email)
+            user.set_password(password)
+            user.save()
+        else:
+            return None
         return user
 
     def create_superuser(self, email, password, **extra_fields):
