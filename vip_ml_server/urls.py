@@ -15,8 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+import os
+from .yolo_ensemble.detection_model import Yolo_Ensemble
+from .yolo_ensemble.face_recognize import Face_Recognition
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('member_manager.urls')),
 ]
+
+# Load deep learning model
+global detect_model
+base_path = os.getcwd() + '/model_data/'
+detect_model = Yolo_Ensemble()
+detect_model.load_model(base_path + 'yolo_face_model.h5', base_path + 'yolo_plate_model.h5')
+
