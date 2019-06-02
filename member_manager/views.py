@@ -56,9 +56,22 @@ def signout(request):
 @csrf_exempt
 def image_upload(request):
     if request.method == 'POST':
-        logger.debug(request.FILES)
-        image = request.FILES['image']
+        #logger.debug(request.FILES)
+        url_list = []
         fs = FileSystemStorage()
-        filename = fs.save(image.name, image)
+        for image in request.FILES.getlist('images'):
+            filename = fs.save(image.name, image)
+            uploaded_file_url = fs.url(filename)
+            url_list.append({'url': uploaded_file_url})
+        return JsonResponse({"urls": url_list})
+
+@csrf_exempt
+def video_upload(request):
+    if request.method == 'POST':
+        #logger.debug(request.FILES)
+        fs = FileSystemStorage()
+        video = request.FILES['video']
+        filename = fs.save(video.name, video)
         uploaded_file_url = fs.url(filename)
+        
         return JsonResponse({'url': uploaded_file_url})
