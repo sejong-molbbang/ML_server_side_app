@@ -21,6 +21,7 @@ class PredictModel(object):
     
     def __init__(self):
         self.progress = 0
+        self.email = ""
 
     def mask_rectangle(self, img, rect):
         (x1, y1, x2, y2) = rect
@@ -38,12 +39,12 @@ class PredictModel(object):
 
             only_face = body['only_face']
             images = body['images']
+            email = body['email']
 
             recognize = False
             if len(images) != 0:
-                recognize = True
-                email = body['email']
-                face_recog_model.set_email(email)       
+                face_recog_model.load_image_encodings(images)
+                recognize = True    
             
             vid = cv2.VideoCapture(video_path)
 
@@ -93,7 +94,7 @@ class PredictModel(object):
         
             #detect_model.close_session()
 
-            return JsonResponse({"result": "complete", "url": body["video"] + '_result.mp4'})
+            return JsonResponse({"result": "complete", "url": body["video"][:-4] + '_result.mp4'})
 
 
     @csrf_exempt

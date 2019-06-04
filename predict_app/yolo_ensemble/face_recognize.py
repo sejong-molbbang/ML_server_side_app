@@ -3,20 +3,11 @@ import os
 from itertools import compress
 
 class Face_Recognition(object):
-    def __init__(self, email=""):
-        if email != "":
-            self.base_path = os.getcwd() + '/DL_model/images/'+email
-            self.load_image_encodings()
-
-    def set_email(self, email):
-        self.base_path = os.getcwd() + '/DL_model/images/'+email
-        self.load_image_encodings()
     
-    def load_image_encodings(self):
-        images = os.listdir(self.base_path)
+    def load_image_encodings(self, images):
         self.encodings = []
         for filename in images:
-            img  = face_recognition.load_image_file(os.path.join(self.base_path, filename))
+            img  = face_recognition.load_image_file("D:/python_projects/vip_ml_server" + filename)
             encoding = face_recognition.face_encodings(img)[0]
             self.encodings.append(encoding)
     
