@@ -62,7 +62,7 @@ def image_upload(request):
         for image in request.FILES.getlist('images'):
             filename = fs.save(image.name, image)
             uploaded_file_url = fs.url(filename)
-            url_list.append({'url': uploaded_file_url})
+            url_list.append(uploaded_file_url)
         return JsonResponse({"urls": url_list})
 
 @csrf_exempt
