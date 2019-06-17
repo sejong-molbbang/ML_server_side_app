@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from PIL import Image
 import json
 import cv2
-import os
+import os, gc
 from .yolo_ensemble.detection_model import Yolo_Ensemble
 from .yolo_ensemble.face_recognize import Face_Recognition
 import logging
@@ -34,8 +34,9 @@ class PredictModel(object):
     @csrf_exempt
     def masking(self, request):
         if request.method == 'POST':
+            base_ = "D:/python_projects/vip_ml_server"
             body = json.loads(request.body)
-            video_path = 'D:/python_projects/vip_ml_server' + body['video']
+            video_path = base_ + body['video']
 
             only_face = body['only_face']
             images = body['images']
@@ -64,7 +65,7 @@ class PredictModel(object):
 
             out = cv2.VideoWriter(output_path, video_FourCC, video_fps, video_size)
 
-            detect_model.get_graph()
+            #detect_model.init_session()
 
             while (vid.isOpened()):
                 return_value, frame = vid.read()
@@ -91,8 +92,13 @@ class PredictModel(object):
                 
                 if cv2.waitKey(wait_time) & 0xFF == ord('q'):
                     break
-        
+
+            vid.release()
+            out.release()
+                    
             #detect_model.close_session()
+
+            gc.collect()
 
             return JsonResponse({"result": "complete", "url": body["video"][:-4] + '_result.mp4'})
 

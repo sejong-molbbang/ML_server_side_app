@@ -56,7 +56,6 @@ def signout(request):
 @csrf_exempt
 def image_upload(request):
     if request.method == 'POST':
-        #logger.debug(request.FILES)
         url_list = []
         fs = FileSystemStorage()
         for image in request.FILES.getlist('images'):

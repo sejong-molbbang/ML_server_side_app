@@ -12,11 +12,7 @@ from keras.backend.tensorflow_backend import set_session
 
 class Yolo_Ensemble(object):
     def __init__(self, score=0.2, iou=0.45, gpu_num=1):
-        #self.sess = K.get_session()
-        config = self.keras_resouce()
-        self.sess = tf.Session(config=config)
-        self.graph = self.sess.graph
-        set_session(self.sess)
+        self.init_session()
         
         self.anchors = np.array([10.0,13.0, 16.0,30.0, 33.0,23.0, 30.0,61.0, 62.0,45.0, 59.0,119.0, 116.0,90.0, 156.0,198.0, 373.0,326.0]).reshape(-1, 2)
         self.model_image_size = (480,480)
@@ -61,9 +57,11 @@ class Yolo_Ensemble(object):
         self.gen_face_model = self.generate(yolo_face_path, self.anchors, 0.2)
         self.gen_plate_model = self.generate(yolo_plate_path, self.anchors, 0.2)
 
-    def get_graph(self):
-        #self.sess = K.get_session()
-        self.graph = tf.get_default_graph()
+    def init_session(self):
+        config = self.keras_resouce()
+        self.sess = tf.Session(config=config)
+        self.graph = self.sess.graph
+        set_session(self.sess)
 
     def detect(self, frame, only_face=False):
         faces = []
@@ -119,7 +117,6 @@ class Yolo_Ensemble(object):
                     plates.append((x1, y1, x2, y2))
        
         return faces, plates
-
 
     def close_session(self):
         self.sess.close()
